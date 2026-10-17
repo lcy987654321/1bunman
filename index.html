@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <meta name="description" content="복잡한 검색은 그만. 필요한 것만 1분 안에.">
+  <title>1분만! — 필요한 것만 1분 안에</title>
+  <style>
+    :root { color-scheme: light; --ink:#191919; --muted:#777; --paper:#f5f6f8; --line:#ececef; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    .app { max-width:680px; min-height:100vh; margin:0 auto; background:var(--paper); padding-bottom:88px; }
+    header { background:#fff; padding:17px 16px 14px; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+    .brandline { display:flex; align-items:center; gap:11px; }
+    .logo { display:grid; place-items:center; width:43px; height:43px; background:#1d1d1d; color:white; border-radius:13px; font-weight:850; letter-spacing:-1.5px; font-size:15px; }
+    .brand { font-size:23px; font-weight:850; letter-spacing:-1px; }
+    .tagline { font-size:12px; color:var(--muted); margin-top:2px; }
+    .intro { background:#ededf0; padding:16px; border-radius:17px; margin-top:15px; }
+    .eyebrow { font-size:12px; color:#666; }
+    .intro h1 { font-size:21px; letter-spacing:-.7px; margin:5px 0 6px; }
+    .intro p { margin:0; font-size:13px; line-height:1.55; color:#555; }
+    .search { margin-top:13px; position:relative; }
+    .search input { width:100%; border:1px solid #e5e5e8; border-radius:12px; background:#f7f7f8; padding:12px 14px; outline:none; }
+    .search input:focus { border-color:#777; background:white; }
+    .tabs { display:flex; gap:8px; overflow-x:auto; padding:14px 0 1px; scrollbar-width:none; }
+    .tabs::-webkit-scrollbar { display:none; }
+    .tab { border:0; border-radius:999px; padding:9px 14px; white-space:nowrap; background:#f0f0f2; color:#444; font-size:13px; font-weight:650; }
+    .tab.active { background:#222; color:#fff; }
+    main { padding:17px 13px 20px; }
+    .sectionline { display:flex; align-items:center; justify-content:space-between; margin:0 3px 13px; }
+    .sectionline h2 { margin:0; font-size:18px; letter-spacing:-.5px; }
+    .count { font-size:12px; color:var(--muted); }
+    .feed { display:grid; gap:13px; }
+    .card { background:white; border-radius:17px; overflow:hidden; border:1px solid #f0f0f2; box-shadow:0 2px 7px #15151505; }
+    .cover { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; background:#e6e6e8; }
+    .cover-fallback { display:grid; place-items:center; width:100%; aspect-ratio:16/9; font-size:48px; background:linear-gradient(135deg,#e9e9ed,#d9d9df); }
+    .cardbody { padding:13px 14px 10px; }
+    .tag { display:inline-flex; padding:5px 8px; border-radius:7px; font-size:11px; font-weight:750; }
+    .tag.humor { background:#fff0e5; color:#a64d00; }
+    .tag.deal { background:#e7f5ea; color:#18723a; }
+    .tag.issue { background:#e9f0ff; color:#2857a4; }
+    .card h3 { margin:10px 0 5px; font-size:17px; letter-spacing:-.45px; line-height:1.4; }
+    .card p { margin:0; color:#666; font-size:13px; line-height:1.5; }
+    .cardfoot { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f1f2; padding:10px 14px; color:#888; font-size:11px; }
+    .save { border:0; background:transparent; padding:5px 0 5px 8px; color:#777; font-size:12px; }
+    .save.saved { color:#d9435b; font-weight:750; }
+    .empty { background:white; padding:28px 15px; text-align:center; border-radius:15px; color:#666; font-size:14px; }
+    .detail { background:#fff; border-radius:17px; padding:15px; }
+    .back { border:0; background:transparent; color:#555; padding:3px 0 12px; }
+    .detail h2 { font-size:22px; line-height:1.35; letter-spacing:-.7px; }
+    .detail p { color:#555; line-height:1.7; font-size:14px; }
+    .note { font-size:12px!important; color:#888!important; background:#f6f6f7; border-radius:10px; padding:11px; }
+    .primary { width:100%; border:0; border-radius:11px; background:#222; color:#fff; padding:12px; font-weight:700; margin-top:8px; }
+    nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:680px; background:#ffffffed; backdrop-filter:blur(12px); border-top:1px solid #e9e9eb; display:flex; justify-content:space-around; padding:8px 5px calc(8px + env(safe-area-inset-bottom)); z-index:10; }
+    .navitem { border:0; background:transparent; color:#888; min-width:54px; padding:5px 4px; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; }
+    .navitem .ico { font-size:20px; line-height:1.1; }
+    .navitem.active { color:#1c1c1c; font-weight:800; }
+    footer { padding:10px 18px 24px; color:#999; text-align:center; font-size:11px; line-height:1.6; }
+    @media(min-width:520px) { main { padding:20px 18px; } .feed { grid-template-columns:repeat(2,minmax(0,1fr)); } .card h3 { font-size:16px; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brandline">
+      <div class="logo">1분</div>
+      <div><div class="brand">1분만!</div><div class="tagline">복잡한 검색은 그만. 필요한 것만.</div></div>
+    </div>
+    <div class="intro">
+      <div class="eyebrow">오늘도 가볍게 둘러보기</div>
+      <h1>지금 뭐가 재밌을까?</h1>
+      <p>웃긴 글부터 알뜰 정보까지,<br>1분이면 충분해요.</p>
+    </div>
+    <div class="search"><input id="search" type="search" placeholder="관심 있는 콘텐츠 검색" aria-label="콘텐츠 검색"></div>
+    <div class="tabs" id="tabs" aria-label="콘텐츠 카테고리">
+      <button class="tab active" data-tab="추천">✨ 추천 피드</button>
+      <button class="tab" data-tab="유머">😂 유머</button>
+      <button class="tab" data-tab="최저가">🏷️ 최저가</button>
+      <button class="tab" data-tab="이슈">📰 이슈</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer>1분만! 시제품 · 예시 콘텐츠만 표시됩니다.<br>실제 가격·뉴스·외부 게시물과 연결되어 있지 않습니다.</footer>
+</div>
+<nav aria-label="하단 메뉴">
+  <button class="navitem active" data-nav="추천"><span class="ico">⌂</span>홈</button>
+  <button class="navitem" data-nav="유머"><span class="ico">☻</span>유머</button>
+  <button class="navitem" data-nav="최저가"><span class="ico">％</span>최저가</button>
+  <button class="navitem" data-nav="이슈"><span class="ico">▤</span>이슈</button>
+  <button class="navitem" data-nav="저장"><span class="ico">♡</span>저장</button>
+</nav>
+<script>
+const posts = [
+ {id:1,cat:"유머",tag:"오늘의 웃짤",title:"분명 5분만 누워 있으려고 했는데…",desc:"모두가 한 번쯤 경험하는 주말의 현실",emoji:"😂",bg:"linear-gradient(135deg,#f9d7c3,#f5b7a5)",kind:"humor"},
+ {id:2,cat:"최저가",tag:"알뜰 쇼핑",title:"매일 쓰는 생필품, 가격 비교하고 사기",desc:"할인율보다 최종 결제 가격을 확인하세요.",emoji:"🛍️",bg:"linear-gradient(135deg,#d7f0dc,#9fd9b0)",kind:"deal"},
+ {id:3,cat:"이슈",tag:"오늘의 이슈",title:"오늘 화제가 된 이야기, 핵심만 빠르게",desc:"주요 내용과 원문 출처를 한눈에 확인",emoji:"📰",bg:"linear-gradient(135deg,#d9e6ff,#a9c5fa)",kind:"issue"},
+ {id:4,cat:"유머",tag:"공감 100%",title:"퇴근 10분 전과 퇴근 1분 후의 차이",desc:"짧게 보고 피식 웃고 가는 콘텐츠",emoji:"💻",bg:"linear-gradient(135deg,#e6dcff,#c1adf6)",kind:"humor"},
+ {id:5,cat:"최저가",tag:"구매 체크",title:"온라인 쇼핑할 때 놓치기 쉬운 3가지",desc:"배송비 · 쿠폰 조건 · 개당 가격",emoji:"🏷️",bg:"linear-gradient(135deg,#fff0c9,#f7d68a)",kind:"deal"},
+ {id:6,cat:"이슈",tag:"이슈 요약",title:"같은 사건을 여러 기사로 읽기 전에",desc:"중복 보도를 줄이고 핵심을 정리해요.",emoji:"🔎",bg:"linear-gradient(135deg,#d6e8ed,#9fc8d4)",kind:"issue"}
+];
+let activeTab = "추천";
+let openedId = null;
+let saved = new Set();
+const main = document.getElementById("main");
+const search = document.getElementById("search");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function visiblePosts() {
+  const q = search.value.trim().toLowerCase();
+  return posts.filter(p => (activeTab==="추천" || activeTab==="저장" ? (activeTab==="저장" ? saved.has(p.id) : true) : p.cat===activeTab)
+    && (p.title+" "+p.desc+" "+p.tag).toLowerCase().includes(q));
+}
+function setTab(tab) {
+  activeTab = tab; openedId = null;
+  document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b.dataset.tab===tab));
+  document.querySelectorAll("[data-nav]").forEach(b => b.classList.toggle("active", b.dataset.nav===tab));
+  render();
+}
+function card(p) {
+ return `<article class="card">
+  <button data-open="${p.id}" style="display:block;width:100%;padding:0;border:0;background:transparent;text-align:left;color:inherit">
+   <div class="cover-fallback" style="background:${p.bg}" role="img" aria-label="${esc(p.cat)} 예시 이미지">${p.emoji}</div>
+   <div class="cardbody">
+    <span class="tag ${p.kind}">${esc(p.tag)}</span>
+    <h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
+   </div>
+  </button>
+  <div class="cardfoot"><span>1분만! · 예시 콘텐츠</span>
+   <button class="save ${saved.has(p.id)?"saved":""}" data-save="${p.id}">${saved.has(p.id)?"♥ 저장됨":"♡ 저장"}</button>
+  </div>
+ </article>`;
+}
+function render() {
+  if (openedId !== null) {
+    const p = posts.find(x=>x.id===openedId);
+    main.innerHTML = `<section class="detail">
+      <button class="back" id="back">← 피드로 돌아가기</button>
+      <div class="cover-fallback" style="background:${p.bg};border-radius:13px" role="img" aria-label="${esc(p.cat)} 예시 이미지">${p.emoji}</div>
+      <p><span class="tag ${p.kind}">${esc(p.cat)}</span> · 시제품 콘텐츠</p>
+      <h2>${esc(p.title)}</h2><p>${esc(p.desc)}</p>
+      <p class="note">이 화면은 테스트용 예시입니다. 실제 게시물이나 검증된 가격·뉴스 정보가 아니며, 외부 출처와 연결되어 있지 않습니다.</p>
+      <button class="primary" data-save="${p.id}">${saved.has(p.id)?"♥ 저장됨 · 다시 누르면 취소":"♡ 즐겨찾기에 저장"}</button>
+    </section>`;
+    document.getElementById("back").addEventListener("click",()=>{openedId=null;render();});
+    return;
+  }
+  const list = visiblePosts();
+  main.innerHTML = `<div class="sectionline"><h2>${activeTab==="추천"?"지금 볼 만한 콘텐츠":activeTab==="저장"?"내가 저장한 콘텐츠":activeTab+" 둘러보기"}</h2><span class="count">${list.length}개</span></div>
+   ${list.length ? `<div class="feed">${list.map(card).join("")}</div>` : `<div class="empty">아직 콘텐츠가 없어요.<br><br>검색어를 바꾸거나 다른 메뉴를 눌러 보세요.</div>`}`;
+  main.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>{openedId=Number(b.dataset.open);render();}));
+  main.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click",()=>toggleSave(Number(b.dataset.save))));
+}
+function toggleSave(id) { if(saved.has(id)) saved.delete(id); else saved.add(id); render(); }
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.nav)));
+search.addEventListener("input",render);
+render();
+</script>
+</body>
+</html>
